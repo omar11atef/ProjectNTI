@@ -1,9 +1,9 @@
 streamlit
 pandas
-numpy
 joblib
-matplotlib
-seaborn
-scikit-learn
 tensorflow
 gdown
+matplotlib
+seaborn
+numpy
+scikit-learn
