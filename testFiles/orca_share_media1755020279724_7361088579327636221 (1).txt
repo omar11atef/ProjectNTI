@@ -1,0 +1,39 @@
+Project Task – Zomato Bangalore Restaurants Dataset
+
+You are provided with the Zomato Bangalore Restaurants dataset from Kaggle. Your task is divided into three main parts:
+
+1. Data Analysis & EDA
+Perform exploratory data analysis on the dataset.
+
+Answer the key questions mentioned in the dataset description.
+
+2. Classification Models
+Build multiple machine learning classification models (e.g., Logistic Regression, Random Forest, XGBoost, etc.).
+
+Build one Neural Network classification model.
+
+Compare the accuracy of all models.
+
+Select the best performing ML model (highest accuracy) and keep the Neural Network model as well.
+
+3. Deployment with Streamlit
+Create a Streamlit web app with two main pages:
+
+a. Analysis Page
+
+Display the visualizations and key findings from your EDA.
+
+b. Prediction Page
+
+Input form to enter details of a new restaurant.
+
+On submission, show two predictions:
+
+Prediction from the best ML model.
+
+Prediction from the Neural Network model.
+
+after that deployment on Streamlit Cloud
+Deploy your app on Streamlit Cloud so it can be accessed online.
+
+If the dataset is too large for deployment, create a smaller sampled version (e.g., 1–2% of the data) that still represents the full dataset.
