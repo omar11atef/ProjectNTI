@@ -4,22 +4,58 @@ import joblib
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+import gdown
 
-# Load models and preprocessor
+# =======================
+# دالة لتحميل الملفات من Google Drive
+# =======================
+def download_from_gdrive(file_id, output):
+    if not os.path.exists(output):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, output, quiet=False)
+
+# =======================
+# تحميل النماذج والمعالج
+# =======================
+download_from_gdrive("1ZyiR3ZiGNXzDihWBuTTIK8PnTa-C0Ew_", "preprocessor.pkl")
+download_from_gdrive("1Hrj1_EKfwqozCTM0FaVi82Qg1nnyfThn", "best_ml_model.pkl")
+download_from_gdrive("13eoCKB9sk3JqPq0qIynO05E_m1y5ebTU", "nn_model.h5")
+
+# =======================
+# إنشاء نسخة صغيرة من البيانات إذا لم تكن موجودة
+# =======================
+if not os.path.exists("zomato_sample.csv"):
+    if os.path.exists("big_dataset.csv"):
+        df_big = pd.read_csv("big_dataset.csv")
+        sample_df = df_big.sample(frac=0.02, random_state=42)  # 2% sample
+        sample_df.to_csv("zomato_sample.csv", index=False)
+        print("✅ Sample dataset created: zomato_sample.csv")
+    else:
+        st.error("No dataset found! Please upload 'zomato_sample.csv' or 'big_dataset.csv'")
+        st.stop()
+
+# =======================
+# تحميل النماذج والمعالج بعد التحميل
+# =======================
 preprocessor = joblib.load('preprocessor.pkl')
 best_ml_model = joblib.load('best_ml_model.pkl')
 nn_model = load_model('nn_model.h5')
 
-# Load sampled dataset for EDA
+# =======================
+# تحميل البيانات للـ EDA
+# =======================
 df = pd.read_csv('zomato_sample.csv')
 
-# Page configuration
+# =======================
+# إعداد صفحة Streamlit
+# =======================
 st.set_page_config(page_title="Zomato Restaurant Rating Predictor", layout="wide")
-
-# Sidebar for navigation
 page = st.sidebar.selectbox("Select Page", ["Analysis", "Prediction"])
 
-# Analysis Page
+# =======================
+# صفحة التحليل
+# =======================
 if page == "Analysis":
     st.title("Zomato Bangalore Restaurants - EDA")
     
@@ -36,8 +72,6 @@ if page == "Analysis":
     fig, ax = plt.subplots(figsize=(8, 6))
     sns.histplot(df['rate'], bins=30, kde=True, ax=ax)
     ax.set_title('Distribution of Restaurant Ratings')
-    ax.set_xlabel('Rating')
-    ax.set_ylabel('Count')
     st.pyplot(fig)
     
     # Top Locations
@@ -46,8 +80,6 @@ if page == "Analysis":
     top_locations = df['location'].value_counts().head(10)
     sns.barplot(x=top_locations.values, y=top_locations.index, ax=ax)
     ax.set_title('Top 10 Locations by Number of Restaurants')
-    ax.set_xlabel('Number of Restaurants')
-    ax.set_ylabel('Location')
     st.pyplot(fig)
     
     # Online Order vs Rating
@@ -55,11 +87,11 @@ if page == "Analysis":
     fig, ax = plt.subplots(figsize=(8, 6))
     sns.boxplot(x='online_order', y='rate', data=df, ax=ax)
     ax.set_title('Rating Distribution by Online Order Availability')
-    ax.set_xlabel('Online Order')
-    ax.set_ylabel('Rating')
     st.pyplot(fig)
 
-# Prediction Page
+# =======================
+# صفحة التنبؤ
+# =======================
 else:
     st.title("Zomato Restaurant Rating Prediction")
     
@@ -69,7 +101,10 @@ else:
         book_table = st.selectbox('Book Table', ['Yes', 'No'])
         votes = st.number_input('Votes', min_value=0, value=0)
         approx_cost = st.number_input('Approx Cost for Two', min_value=0.0, value=0.0)
-        listed_type = st.selectbox('Listed In (Type)', ['Buffet', 'Cafes', 'Delivery', 'Desserts', 'Dine-out', 'Drinks & nightlife', 'Pubs and bars'])
+        listed_type = st.selectbox('Listed In (Type)', [
+            'Buffet', 'Cafes', 'Delivery', 'Desserts', 
+            'Dine-out', 'Drinks & nightlife', 'Pubs and bars'
+        ])
         submitted = st.form_submit_button("Predict")
         
         if submitted:
