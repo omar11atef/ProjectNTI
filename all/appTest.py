@@ -16,11 +16,12 @@ def download_from_gdrive(file_id, output):
         gdown.download(url, output, quiet=False)
 
 # =======================
-# تحميل النماذج والمعالج
+# تحميل الملفات (المعالج + النماذج + البيانات)
 # =======================
 download_from_gdrive("1ZyiR3ZiGNXzDihWBuTTIK8PnTa-C0Ew_", "preprocessor.pkl")
 download_from_gdrive("1Hrj1_EKfwqozCTM0FaVi82Qg1nnyfThn", "best_ml_model.pkl")
 download_from_gdrive("13eoCKB9sk3JqPq0qIynO05E_m1y5ebTU", "nn_model.h5")
+download_from_gdrive("1U3CMhKvQ2_lOaFKVpFQVDxrr6hV4UE_Z", "zomato_sample.csv")
 
 # =======================
 # إنشاء نسخة صغيرة من البيانات إذا لم تكن موجودة
